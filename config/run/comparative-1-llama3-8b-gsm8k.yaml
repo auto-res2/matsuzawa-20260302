@@ -1,0 +1,26 @@
+# Baseline: Standard Chain-of-Thought
+run_id: comparative-1-llama3-8b-gsm8k
+
+method:
+  type: standard_cot
+  description: "Standard CoT with 'Let's think step by step.' prompt"
+  prompt_template: "Let's think step by step."
+  max_new_tokens: 512
+
+model:
+  name: meta-llama/Llama-3.1-8B-Instruct
+  type: llm
+  device: cuda
+  dtype: float16
+
+dataset:
+  name: gsm8k
+  split: test
+  subset: main
+  num_samples: 200  # Full run uses 200, sanity_check will override
+
+inference:
+  temperature: 0.0  # Deterministic decoding
+  top_p: 1.0
+  batch_size: 1  # Process one at a time to avoid padding
+  cache_dir: .cache

@@ -1,0 +1,53 @@
+# Proposed: CDP-CoT with tau=1, B=8
+run_id: proposed-llama3-8b-gsm8k-tau1-b8
+
+method:
+  type: cdp_cot
+  description: "Confidence-Calibrated Dual-Pass CoT with tau=1, B=8"
+  confidence_threshold: 1
+  max_reasoning_steps: 8
+  pass_a_template: |
+    Answer the following math problem. Give only your final numeric answer and your confidence level.
+    Format your response as:
+    Draft: [your answer]
+    Confidence: [0, 1, 2, or 3]
+    
+    Confidence levels:
+    0 = completely guessing
+    1 = low confidence
+    2 = moderate confidence
+    3 = highly certain
+  pass_b_template: |
+    Your previous draft answer may need verification. Please:
+    1. Show up to {max_steps} short reasoning steps (stop early if sufficient)
+    2. Run this verification checklist:
+       - Check units and quantities
+       - Verify arithmetic consistency
+       - Check constraint satisfaction
+       - Verify answer format
+    3. Provide your final answer.
+    
+    Format:
+    Reasoning: [your steps]
+    Verification: [checklist results]
+    Final: [your final answer]
+  max_new_tokens_pass_a: 100
+  max_new_tokens_pass_b: 600
+
+model:
+  name: meta-llama/Llama-3.1-8B-Instruct
+  type: llm
+  device: cuda
+  dtype: float16
+
+dataset:
+  name: gsm8k
+  split: test
+  subset: main
+  num_samples: 200
+
+inference:
+  temperature: 0.0
+  top_p: 1.0
+  batch_size: 1
+  cache_dir: .cache

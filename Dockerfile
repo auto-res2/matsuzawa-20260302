@@ -34,8 +34,13 @@ RUN uv sync --frozen || uv sync
 # Copy the rest of the application
 COPY . .
 
-# Create results directory
-RUN mkdir -p .research/results
+# Create results directory and cache directories
+RUN mkdir -p .research/results .cache
+
+# Set cache directory for models and datasets
+ENV HF_HOME=/workspace/.cache
+ENV TRANSFORMERS_CACHE=/workspace/.cache/transformers
+ENV HF_DATASETS_CACHE=/workspace/.cache/datasets
 
 # Default command (can be overridden in workflow)
 CMD ["bash"]
