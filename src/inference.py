@@ -1,6 +1,5 @@
 """Inference script for CDP-CoT and baseline CoT experiments."""
 
-
 import json
 import os
 from pathlib import Path
